@@ -23,4 +23,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.io/jokyo2/MoneyPrinter
+          tags: docker.io/jokyo2/moneyprinter
