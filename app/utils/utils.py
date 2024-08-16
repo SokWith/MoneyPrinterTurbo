@@ -15,12 +15,12 @@ urllib3.disable_warnings()
 
 def get_response(status: int, data: Any = None, message: str = ""):
     obj = {
-        'status': status,
+        "status": status,
     }
     if data:
-        obj['data'] = data
+        obj["data"] = data
     if message:
-        obj['message'] = message
+        obj["message"] = message
     return obj
 
 
@@ -41,7 +41,7 @@ def to_json(obj):
             elif isinstance(o, (list, tuple)):
                 return [serialize(item) for item in o]
             # 如果对象是自定义类型，尝试返回其__dict__属性
-            elif hasattr(o, '__dict__'):
+            elif hasattr(o, "__dict__"):
                 return serialize(o.__dict__)
             # 其他情况返回None（或者可以选择抛出异常）
             else:
@@ -67,10 +67,13 @@ def root_dir():
     return os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
-def storage_dir(sub_dir: str = ""):
+def storage_dir(sub_dir: str = "", create: bool = False):
     d = os.path.join(root_dir(), "storage")
     if sub_dir:
         d = os.path.join(d, sub_dir)
+    if create and not os.path.exists(d):
+        os.makedirs(d)
+
     return d
 
 
@@ -196,7 +199,8 @@ def split_string_by_punctuations(s):
 
 def md5(text):
     import hashlib
-    return hashlib.md5(text.encode('utf-8')).hexdigest()
+
+    return hashlib.md5(text.encode("utf-8")).hexdigest()
 
 
 def get_system_locale():
@@ -219,3 +223,7 @@ def load_locales(i18n_dir):
                 with open(os.path.join(root, file), "r", encoding="utf-8") as f:
                     _locales[lang] = json.loads(f.read())
     return _locales
+
+
+def parse_extension(filename):
+    return os.path.splitext(filename)[1].strip().lower().replace(".", "")
